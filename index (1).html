@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Movere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0E24;
+    --bg-alt: #0F1430;
+    --panel: #131A3C;
+    --line: #262E56;
+    --chalk: #F4F5FA;
+    --muted: #8992B8;
+    --accent: #3654FF;
+    --accent-dim: #2540C9;
+    --radius: 2px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(1100px 560px at 82% -8%, rgba(54,84,255,0.16), transparent 60%),
+      radial-gradient(800px 500px at -10% 30%, rgba(54,84,255,0.08), transparent 55%),
+      var(--bg);
+    color:var(--chalk);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Manrope', sans-serif;
+    letter-spacing:0.01em;
+    line-height:1;
+    font-weight:800;
+  }
+  .mono{
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    letter-spacing:0.16em;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  .wrap{
+    max-width:1160px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+  ::selection{ background:var(--accent); color:var(--bg); }
+
+  /* Tag / signature element */
+  .tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Manrope', sans-serif;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--chalk);
+    background:transparent;
+    padding:6px 0;
+    border:none;
+    border-bottom:2px solid var(--accent);
+  }
+  .tag--ghost{
+    color:var(--muted);
+    border-bottom-color:var(--line);
+  }
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,14,36,0.82);
+    backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px;
+  }
+  .logo{
+    font-family:'Manrope', sans-serif;
+    font-size:19px;
+    font-weight:300;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo b{
+    font-weight:800;
+  }
+  .logo-mark{
+    height:26px; width:auto;
+    flex-shrink:0;
+  }
+  .nav-links{
+    display:flex; gap:32px;
+    font-size:14px; font-weight:500;
+    color:var(--muted);
+  }
+  .nav-links a:hover{ color:var(--chalk); }
+  .btn{
+    font-family:'Manrope', sans-serif;
+    font-size:13px; font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:13px 22px;
+    border:2px solid var(--accent);
+    background:var(--accent);
+    color:var(--chalk);
+    cursor:pointer;
+    box-shadow:0 1px 2px rgba(0,0,0,0.2), 0 8px 20px -8px rgba(54,84,255,0.55);
+    transition:transform 0.2s cubic-bezier(.2,.8,.2,1), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+  .btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.25), 0 14px 30px -10px rgba(54,84,255,0.65);
+  }
+  .btn:active{ transform:translateY(0); }
+  .btn:focus-visible{ outline:2px solid var(--chalk); outline-offset:2px; }
+  .btn--outline{
+    background:transparent;
+    color:var(--accent);
+    box-shadow:none;
+  }
+  .btn--outline:hover{
+    background:rgba(54,84,255,0.08);
+    box-shadow:0 4px 14px -6px rgba(54,84,255,0.3);
+  }
+  .nav-cta{ display:none; }
+  @media(min-width:840px){ .nav-cta{ display:inline-flex; } }
+  .nav-links{ display:none; }
+  @media(min-width:840px){ .nav-links{ display:flex; } }
+
+  /* Hero */
+  .hero{
+    position:relative;
+    padding:90px 0 70px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    gap:48px;
+    align-items:center;
+  }
+  @media(min-width:900px){
+    .hero-grid{ grid-template-columns:1.1fr 0.9fr; }
+  }
+  .eyebrow{ margin-bottom:22px; }
+  .hero h1{
+    font-size:clamp(48px, 9vw, 92px);
+    text-transform:uppercase;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--accent);
+  }
+  .hero p{
+    color:var(--muted);
+    font-size:17px;
+    max-width:440px;
+    margin:22px 0 30px;
+  }
+  .movimento-triad{
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.04em;
+    color:var(--accent);
+    margin:-18px 0 26px;
+  }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+
+  .mark{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/5;
+    max-width:380px;
+    margin:0 auto;
+    border:1px solid var(--line);
+    background:linear-gradient(160deg, var(--panel), var(--bg-alt));
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    padding:26px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 30px 60px -20px rgba(0,0,0,0.55),
+      0 10px 30px -12px rgba(54,84,255,0.25);
+  }
+  .mark::before{
+    content:"";
+    position:absolute;
+    top:-20%; left:55%;
+    width:60%; height:160%;
+    background:linear-gradient(135deg, var(--accent), #6C86FF);
+    transform:rotate(18deg);
+    opacity:0.35;
+    filter:drop-shadow(-14px 0 30px rgba(54,84,255,0.25));
+  }
+  .mark::after{
+    content:"";
+    position:absolute;
+    top:-20%; left:78%;
+    width:14%; height:160%;
+    background:var(--accent-dim);
+    transform:rotate(18deg);
+    opacity:0.25;
+  }
+  .mark-icon{
+    position:relative;
+    z-index:2;
+    width:62%;
+    height:auto;
+    filter:drop-shadow(0 12px 24px rgba(0,0,0,0.4));
+  }
+
+  .stat-strip{
+    border-top:1px solid var(--line);
+    margin-top:64px;
+    padding-top:28px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+  }
+  @media(min-width:640px){ .stat-strip{ grid-template-columns:repeat(4,1fr); } }
+  .stat b{
+    display:block;
+    font-family:'Manrope', sans-serif;
+    font-weight:800;
+    font-size:28px;
+    color:var(--chalk);
+    text-shadow:0 0 24px rgba(54,84,255,0.5);
+  }
+  .stat span{
+    font-size:12px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+
+  [data-reveal]{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);
+  }
+  [data-reveal].is-visible{
+    opacity:1;
+    transform:none;
+  }
+
+  section{ padding:80px 0; }
+  .section-head{ margin-bottom:44px; max-width:560px; }
+  .section-head h2{
+    font-size:clamp(34px,5vw,52px);
+    text-transform:uppercase;
+    margin-top:16px;
+  }
+  .section-head p{ color:var(--muted); margin-top:14px; }
+
+  /* Sobre */
+  .sobre{ border-bottom:1px solid var(--line); background:var(--bg-alt); }
+  .sobre-grid{
+    display:grid; gap:36px;
+  }
+  @media(min-width:800px){ .sobre-grid{ grid-template-columns:1fr 1fr; } }
+  .sobre-item{
+    border-left:2px solid var(--accent);
+    padding-left:18px;
+  }
+  .sobre-item h3{
+    font-size:22px; text-transform:uppercase; margin-bottom:8px;
+  }
+  .sobre-item p{ color:var(--muted); font-size:15px; }
+
+  /* Modalidades */
+  .cards{
+    display:grid; gap:20px;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  }
+  .card{
+    background:linear-gradient(165deg, var(--panel), var(--bg-alt));
+    border:1px solid var(--line);
+    padding:28px;
+    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset, 0 20px 40px -28px rgba(0,0,0,0.6);
+    transition:border-color 0.25s ease, transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow 0.25s ease;
+  }
+  .card:hover{
+    border-color:var(--accent);
+    transform:translateY(-4px);
+    box-shadow:0 1px 0 rgba(255,255,255,0.05) inset, 0 24px 44px -20px rgba(54,84,255,0.28);
+  }
+  .card .tag{ margin-bottom:16px; }
+  .card h3{ font-size:24px; text-transform:uppercase; margin-bottom:8px; }
+  .card p{ color:var(--muted); font-size:14px; }
+
+  /* Horários */
+  .horarios{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--bg-alt); }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:'Manrope', sans-serif;
+    font-size:13px;
+  }
+  th,td{
+    border:1px solid var(--line);
+    padding:12px 10px;
+    text-align:center;
+  }
+  th{
+    background:var(--panel);
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-size:11px;
+  }
+  td{ color:var(--muted); }
+  td.on{ color:var(--chalk); }
+  .table-scroll{
+    overflow-x:auto;
+    border:1px solid var(--line);
+    box-shadow:0 20px 40px -30px rgba(0,0,0,0.6);
+  }
+  table{ border:none; }
+
+  /* Planos */
+  .plans{
+    display:grid; gap:20px;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  }
+  .plan{
+    border:1px solid var(--line);
+    background:linear-gradient(165deg, var(--panel), var(--bg-alt));
+    padding:32px 26px;
+    position:relative;
+    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset, 0 20px 40px -28px rgba(0,0,0,0.6);
+    transition:transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow 0.25s ease;
+  }
+  .plan:hover{ transform:translateY(-4px); }
+  .plan--featured{
+    border-color:var(--accent);
+    background:linear-gradient(180deg, rgba(54,84,255,0.14), var(--panel) 55%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.05) inset,
+      0 30px 60px -24px rgba(54,84,255,0.4),
+      0 0 0 1px rgba(54,84,255,0.15);
+  }
+  .plan h3{ font-size:20px; text-transform:uppercase; color:var(--muted); }
+  .plan .price{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:52px;
+    color:var(--chalk);
+    margin:14px 0 4px;
+  }
+  .plan .price span{ font-size:16px; font-family:'Inter',sans-serif; color:var(--muted); }
+  .plan ul{ list-style:none; margin:22px 0 26px; }
+  .plan li{
+    font-size:14px; color:var(--muted);
+    padding:8px 0; border-top:1px solid var(--line);
+  }
+  .plan li:first-child{ border-top:none; }
+  .plan .btn{ width:100%; text-align:center; }
+
+  /* Depoimentos */
+  .depoimentos{ border-top:1px solid var(--line); background:var(--bg-alt); }
+  .quote-strip{
+    display:grid; gap:20px;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  }
+  .quote{
+    border:1px solid var(--line);
+    padding:28px;
+    background:linear-gradient(165deg, var(--panel), var(--bg-alt));
+    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset, 0 20px 40px -30px rgba(0,0,0,0.6);
+  }
+  .quote p{ font-size:15px; color:var(--chalk); margin-bottom:16px; }
+  .quote footer{
+    font-family:'Manrope', sans-serif;
+    font-size:12px; color:var(--muted); text-transform:uppercase;
+  }
+
+  /* Contato */
+  .contato-grid{
+    display:grid; gap:40px;
+  }
+  @media(min-width:880px){ .contato-grid{ grid-template-columns:1fr 1fr; } }
+  .map-block{
+    border:1px solid var(--line);
+    background:var(--panel);
+    aspect-ratio:4/3;
+    overflow:hidden;
+    box-shadow:0 20px 40px -30px rgba(0,0,0,0.6);
+  }
+  .map-block iframe{ display:block; }
+
+  footer.site-footer{
+    border-top:1px solid var(--line);
+    padding:36px 0;
+  }
+  .footer-row{
+    display:flex; flex-wrap:wrap; gap:16px;
+    align-items:center; justify-content:space-between;
+    font-size:13px; color:var(--muted);
+  }
+
+  /* Manifesto (grandes declarações, estilo carrossel) */
+  .manifesto{
+    background:var(--bg-alt);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .manifesto-grid{
+    display:grid; gap:48px;
+  }
+  @media(min-width:800px){ .manifesto-grid{ grid-template-columns:1fr 1fr; } }
+  .manifesto blockquote{
+    border-left:2px solid var(--accent);
+    padding-left:24px;
+  }
+  .manifesto blockquote p{
+    font-family:'Manrope', sans-serif;
+    font-weight:300;
+    font-size:clamp(20px,2.6vw,26px);
+    color:var(--muted);
+    line-height:1.3;
+  }
+  .manifesto blockquote p.manifesto-strong{
+    font-weight:800;
+    color:var(--chalk);
+    text-transform:uppercase;
+    margin-top:6px;
+    letter-spacing:0.01em;
+  }
+  .manifesto-lead{
+    max-width:680px;
+    margin:0 auto 56px;
+    text-align:center;
+  }
+  .manifesto-lead p{
+    font-family:'Manrope', sans-serif;
+    font-weight:300;
+    font-size:clamp(19px,2.4vw,24px);
+    color:var(--chalk);
+    line-height:1.45;
+  }
+  .manifesto-lead p + p{ margin-top:16px; }
+
+
+  /* Banner MOVERE */
+  .banner{
+    position:relative;
+    background:var(--bg);
+    overflow:hidden;
+    text-align:center;
+    padding:100px 0;
+  }
+  .banner-ghost{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    font-family:'Manrope', sans-serif;
+    font-weight:800;
+    font-size:clamp(80px,18vw,220px);
+    color:transparent;
+    -webkit-text-stroke:1px var(--line);
+    white-space:nowrap;
+    z-index:0;
+    letter-spacing:0.02em;
+    user-select:none;
+  }
+  .banner-text{
+    position:relative;
+    z-index:1;
+    max-width:640px;
+    margin:0 auto;
+    font-family:'Manrope', sans-serif;
+    font-weight:300;
+    font-size:clamp(19px,2.6vw,26px);
+    color:var(--chalk);
+    line-height:1.5;
+  }
+  .banner-text b{ font-weight:800; color:var(--accent); }
+
+  /* Problema (texto longo, estilo manifesto) */
+  .problema{
+    background:var(--bg-alt);
+    border-bottom:1px solid var(--line);
+  }
+  .problema-content{
+    max-width:620px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .problema-content p{
+    font-family:'Manrope', sans-serif;
+    font-weight:300;
+    font-size:clamp(17px,2.1vw,20px);
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .problema-content p + p{ margin-top:16px; }
+  .problema-emphasis{
+    margin-top:28px !important;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-weight:700 !important;
+    font-size:clamp(21px,3vw,28px) !important;
+    color:var(--chalk) !important;
+    text-transform:uppercase;
+    line-height:1.3 !important;
+  }
+
+  .faq-list{ display:flex; flex-direction:column; gap:1px; border-top:1px solid var(--line); }
+  .faq-item{
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:6px 22px;
+  }
+  .faq-item summary{
+    cursor:pointer;
+    list-style:none;
+    padding:18px 0;
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{
+    content:"+";
+    flex-shrink:0;
+    font-size:20px;
+    font-weight:400;
+    color:var(--accent);
+    transition:transform 0.25s ease;
+  }
+  .faq-item[open] summary::after{ transform:rotate(45deg); }
+  .faq-item p{
+    color:var(--muted);
+    font-size:14px;
+    padding-bottom:20px;
+    max-width:640px;
+  }
+
+  /* Floating WhatsApp */
+  .wa-float{
+    position:fixed;
+    right:20px; bottom:20px;
+    z-index:60;
+    display:flex; align-items:center; gap:10px;
+    background:#25D366;
+    color:#0A0E24;
+    padding:13px 18px;
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    box-shadow:0 10px 26px -8px rgba(0,0,0,0.5);
+    transition:transform 0.2s ease;
+  }
+  .wa-float:hover{ transform:translateY(-2px); }
+  .wa-float svg{ width:18px; height:18px; flex-shrink:0; }
+  @media(max-width:600px){ .wa-float span{ display:none; } .wa-float{ padding:14px; border-radius:50%; } }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .btn:hover{ transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo"><img src="logo-icon.png" alt="Studio Movere" class="logo-mark">STUDIO <b>MOVERE</b></a>
+    <nav class="nav-links">
+      <a href="#sobre">O studio</a>
+      <a href="#modalidades">Método</a>
+      <a href="#horarios">Horários</a>
+      <a href="#planos">Planos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <a href="#" class="btn nav-cta" data-wa data-wa-msg="Olá! Quero agendar uma avaliação no Studio Movere.">Agendar avaliação</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="tag">@_studiomovere</span></div>
+      <h1>O movimento<br>começa <em>aqui.</em></h1>
+      <p>Treino individual e em pequenos grupos, com acompanhamento de perto — porque treinar sozinho raramente entrega o resultado que você busca.</p>
+      <p class="movimento-triad">Movimento consciente. Movimento com força. Movimento que evolui.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn" data-wa data-wa-msg="Olá! Quero agendar uma avaliação no Studio Movere.">Agendar avaliação</a>
+        <a href="#planos" class="btn btn--outline">Ver planos</a>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><b>1:4</b><span>Aluno por turma</span></div>
+        <div class="stat"><b>100%</b><span>Acompanhado</span></div>
+        <div class="stat"><b>06:00</b><span>Primeira turma</span></div>
+        <div class="stat"><b>21:00</b><span>Última turma</span></div>
+      </div>
+    </div>
+    <div class="mark">
+      <img src="logo-icon.png" alt="Studio Movere" class="mark-icon">
+    </div>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="wrap manifesto-grid" data-reveal-group>
+    <blockquote>
+      <p>Aqui, você não treina por conta própria.</p>
+      <p class="manifesto-strong">Você tem direção.</p>
+    </blockquote>
+    <blockquote>
+      <p>Poucas pessoas por horário.</p>
+      <p class="manifesto-strong">Mais atenção. Mais resultado.</p>
+    </blockquote>
+  </div>
+</section>
+
+<section class="sobre" id="sobre">
+  <div class="wrap">
+    <div class="manifesto-lead" data-reveal>
+      <p>Se cada pessoa possui um corpo diferente, uma rotina diferente e objetivos diferentes — por que o treino deveria ser igual pra todo mundo?</p>
+      <p>Acreditamos que evolução acontece quando o treino respeita sua individualidade. Por isso, cada aluno é acompanhado de forma mais próxima, com atenção ao seu ritmo, às suas necessidades e ao seu processo.</p>
+    </div>
+    <div class="section-head" data-reveal>
+      <span class="tag tag--ghost">Por que um studio</span>
+      <h2>Nosso studio não é para todo mundo</h2>
+    </div>
+    <div class="sobre-grid">
+      <div class="sobre-item">
+        <h3>Turmas reduzidas</h3>
+        <p>Poucos alunos por horário — o professor te vê treinar, corrige na hora e ajusta a carga com você, não depois.</p>
+      </div>
+      <div class="sobre-item">
+        <h3>Programa individual</h3>
+        <p>Cada pessoa é diferente: sua ficha é montada pro seu objetivo, seu histórico e sua rotina, não copiada de ninguém.</p>
+      </div>
+      <div class="sobre-item">
+        <h3>Sem treinar sozinho</h3>
+        <p>A maior causa de resultado que não vem é treinar sem direção. Aqui você nunca está por conta própria.</p>
+      </div>
+      <div class="sobre-item">
+        <h3>Espaço pensado</h3>
+        <p>Estrutura enxuta e equipada, sem aglomeração, para o foco ficar no treino — não em disputar equipamento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="modalidades">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="tag">Método</span>
+      <h2>Como a gente treina</h2>
+      <p>Todo aluno passa por avaliação antes do primeiro treino — o programa é montado a partir disso.</p>
+    </div>
+    <div class="cards" data-reveal-group>
+      <div class="card">
+        <span class="tag mono">Até 4 alunos</span>
+        <h3>Pequeno grupo</h3>
+        <p>Energia de turma com o cuidado de treino individual — cada um no seu ritmo, mesmo espaço.</p>
+      </div>
+      <div class="card">
+        <span class="tag mono">Base</span>
+        <h3>Avaliação física</h3>
+        <p>Ponto de partida de todo aluno novo — entender objetivo, histórico e limitações antes de montar o plano.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="horarios" id="horarios">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="tag tag--ghost">Funcionamento</span>
+      <h2>Horários</h2>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Modalidade</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="on">Personal / Grupo</td><td class="on">06:00–21:00</td><td class="on">06:00–21:00</td><td class="on">06:00–21:00</td><td class="on">06:00–21:00</td><td class="on">06:00–21:00</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="planos">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="tag">Planos</span>
+      <h2>Escolha sua frequência</h2>
+      <p>Os planos variam pela quantidade de dias por semana. Chama no WhatsApp pra saber os valores e fechar o seu.</p>
+    </div>
+    <div class="plans" data-reveal-group>
+      <div class="plan">
+        <h3>2x por semana</h3>
+        <div class="price">R$––<span>/mês</span></div>
+        <a href="#" class="btn btn--outline" data-wa data-wa-msg="Olá! Tenho interesse no plano de 2x por semana do Studio Movere.">Quero esse</a>
+      </div>
+      <div class="plan">
+        <h3>3x por semana</h3>
+        <div class="price">R$––<span>/mês</span></div>
+        <a href="#" class="btn btn--outline" data-wa data-wa-msg="Olá! Tenho interesse no plano de 3x por semana do Studio Movere.">Quero esse</a>
+      </div>
+      <div class="plan">
+        <h3>5x por semana</h3>
+        <div class="price">R$––<span>/mês</span></div>
+        <a href="#" class="btn btn--outline" data-wa data-wa-msg="Olá! Tenho interesse no plano de 5x por semana do Studio Movere.">Quero esse</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="duvidas">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="tag tag--ghost">Dúvidas</span>
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <div class="faq-list" data-reveal-group>
+      <details class="faq-item">
+        <summary>Preciso já ter treinado antes?</summary>
+        <p>Não. Aqui, cada pessoa começa do seu ponto de partida.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Tem muitas pessoas por horário?</summary>
+        <p>Não. Trabalhamos com poucas pessoas para garantir mais atenção.</p>
+      </details>
+      <details class="faq-item">
+        <summary>É só para quem quer ganhar massa muscular?</summary>
+        <p>Não. O foco é saúde, condicionamento, qualidade de vida e evolução.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Vou conseguir acompanhar?</summary>
+        <p>Sim. O processo é adaptado à sua realidade e ao seu ritmo.</p>
+      </details>
+      <details class="faq-item">
+        <summary>O treino é igual para todo mundo?</summary>
+        <p>Não. O acompanhamento é individual e o treino respeita seus objetivos.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="problema">
+  <div class="wrap">
+    <div class="problema-content" data-reveal>
+      <p>Muitas vezes, o problema não é falta de esforço.</p>
+      <p>É tentar fazer tudo sozinho, sem acompanhamento, sem estratégia e sem constância.</p>
+      <p>Treinar vai muito além de apenas executar exercícios. Seu corpo precisa de atenção, adaptação e método.</p>
+      <p>Quando existe acompanhamento de verdade, o processo se torna mais seguro, leve e eficiente.</p>
+      <p class="problema-emphasis">Porque resultado não vem apenas de tentativa.<br>Vem da forma certa de fazer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="depoimentos">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="tag tag--ghost">Quem treina, aprova</span>
+      <h2>Depoimentos</h2>
+    </div>
+    <div class="quote-strip" data-reveal-group>
+      <div class="quote">
+        <p>"Os treinos têm sido bem desafiadores pra mim, principalmente por causa do meu peso. Mas como são poucas pessoas por horário, o Mateus consegue me ajudar bastante, e isso faz toda a diferença. Já sinto que estou evoluindo."</p>
+        <footer>— Aluno(a)</footer>
+      </div>
+      <div class="quote">
+        <p>"O que mais gosto é o atendimento personalizado, pois sinto-me segura de que estou exercitando corretamente. Sou bem assistida pelo personal com disponibilidade e disposição para me orientar nos treinos."</p>
+        <footer>— Aluno(a)</footer>
+      </div>
+      <div class="quote">
+        <p>"Gostei de tudo, mas principalmente do fato de ter só 4 pessoas por horário. O Mateus consegue dar atenção pra todo mundo, e o studio não fica cheio, então não tem aquela coisa de disputar aparelho."</p>
+        <footer>— Aluno(a)</footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="banner">
+  <div class="wrap">
+    <p class="banner-ghost">MOVERE</p>
+    <p class="banner-text" data-reveal>Mais do que um lugar para treinar, a <b>MOVERE</b> foi criada para oferecer uma experiência de acompanhamento, cuidado e evolução.</p>
+  </div>
+</section>
+
+<section id="contato">
+  <div class="wrap">
+    <span class="tag">Contato</span>
+    <h2 style="margin-top:16px; font-size:clamp(30px,4vw,44px); text-transform:uppercase;">Vem treinar com a gente</h2>
+    <p style="font-family:'Manrope',sans-serif; font-weight:300; color:var(--chalk); font-size:15px; margin-top:10px;">O movimento não é só ação, é escolha.</p>
+    <p style="color:var(--muted); margin:14px 0 24px; max-width:420px;">Marque sua avaliação e conheça o studio — chame direto no WhatsApp.</p>
+    <a href="#" class="btn" data-wa data-wa-msg="Olá! Quero agendar uma avaliação no Studio Movere." style="display:inline-flex; margin-bottom:32px;">Chamar no WhatsApp</a>
+    <div class="map-block" style="max-width:640px;">
+      <iframe id="map-embed" title="Localização Studio Movere" width="100%" height="100%" style="border:0; filter:grayscale(0.3) invert(0.92) contrast(0.9);" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<a href="#" id="wa-float" class="wa-float" data-wa data-wa-msg="Olá! Vim pelo site e quero saber mais sobre o Studio Movere." aria-label="Chamar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.1-.3-.2-.5-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.4 5.1L2 22l5-1.3c1.4.8 3.1 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3C4.2 15 3.8 13.5 3.8 12c0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.7 8.2-8.2 8.2z"/></svg>
+  <span>WhatsApp</span>
+</a>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p style="font-family:'Manrope',sans-serif; font-weight:300; letter-spacing:0.04em; color:var(--muted); margin-bottom:20px; font-size:14px;">Onde o movimento começa, e faz sentido.</p>
+    <div class="footer-row">
+      <span class="logo" style="font-size:14px;"><img src="logo-icon.png" alt="Studio Movere" class="logo-mark" style="height:18px;">STUDIO <b>MOVERE</b></span>
+      <span>© 2026 Studio Movere. Protótipo de portfólio.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ======================================================
+  // CONFIGURAÇÃO — edite só aqui e o site inteiro atualiza
+  // ======================================================
+  var CONFIG = {
+    whatsapp: "5531995312787",     // número com DDI+DDD, só dígitos (ex: 55 + DDD + número)
+    address: "Studio Movere, Itaguara - MG" // endereço real pro mapa
+  };
+
+  (function(){
+    // Links de WhatsApp com mensagem pronta em cada botão marcado com data-wa
+    document.querySelectorAll('[data-wa]').forEach(function(el){
+      var msg = el.getAttribute('data-wa-msg') || 'Olá! Vim pelo site do Studio Movere.';
+      el.href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(msg);
+      el.target = '_blank';
+      el.rel = 'noopener';
+    });
+
+    // Mapa real a partir do endereço configurado
+    var mapFrame = document.getElementById('map-embed');
+    if (mapFrame) {
+      mapFrame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(CONFIG.address) + '&output=embed';
+    }
+  })();
+</script>
+
+<script>
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var groups = document.querySelectorAll('[data-reveal-group] > *');
+    groups.forEach(function(el, i){
+      el.setAttribute('data-reveal','');
+      el.style.transitionDelay = reduce ? '0s' : (Math.min(i,4) * 70) + 'ms';
+    });
+    if(reduce){
+      document.querySelectorAll('[data-reveal]').forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(function(el){ io.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
